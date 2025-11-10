@@ -1,6 +1,5 @@
 import { ConfigService } from '@config/env.config';
 import { Logger } from '@config/logger.config';
-import { PrismaClient } from '@prisma/client';
 
 export class Query<T> {
   where?: T;
@@ -9,20 +8,16 @@ export class Query<T> {
   offset?: number;
 }
 
-export class PrismaRepository extends PrismaClient {
-  constructor(private readonly configService: ConfigService) {
-    super();
-  }
-
+export class PrismaRepository {
   private readonly logger = new Logger('PrismaRepository');
 
+  constructor(private readonly configService: ConfigService) {}
+
   public async onModuleInit() {
-    await this.$connect();
-    this.logger.info('Repository:Prisma - ON');
+    this.logger.info('⚠️ Prisma desativado neste ambiente (Render).');
   }
 
   public async onModuleDestroy() {
-    await this.$disconnect();
-    this.logger.warn('Repository:Prisma - OFF');
+    this.logger.warn('⚠️ Prisma não inicializado (modo sem banco).');
   }
 }
